@@ -1,29 +1,38 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { CreateFreeCompanyDTO } from './dto/create-free-company.dto';
-import {
-    FreeCompany,
-    FreeCompanyDocument,
-} from './schemas/free-company.schema';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { FreeCompany, Prisma } from '@prisma/client';
 
 @Injectable()
 export class FreeCompanyService {
-    constructor(
-        @InjectModel(FreeCompany.name)
-        private freeCompanyModel: Model<FreeCompanyDocument>,
-    ) {}
+    constructor(private prisma: PrismaService) {}
 
-    create(fcDto: CreateFreeCompanyDTO): Promise<FreeCompany> {
-        const createdFc = new this.freeCompanyModel(fcDto);
-        return createdFc.save();
+    create(data: Prisma.FreeCompanyCreateInput): Promise<FreeCompany> {
+        return this.prisma.freeCompany.create({ data });
     }
 
-    findAll(): Promise<FreeCompany[]> {
-        return this.freeCompanyModel.find().exec();
+    freeCompanies(params: {
+        skip?: number;
+        take?: number;
+        cursor?: Prisma.FreeCompanyWhereUniqueInput;
+        where?: Prisma.FreeCompanyWhereInput;
+        orderBy?: Prisma.FreeCompanyOrderByWithRelationInput;
+    }): Promise<FreeCompany[]> {
+        const { skip, take, cursor, where, orderBy } = params;
+
+        return this.prisma.freeCompany.findMany({
+            skip,
+            take,
+            cursor,
+            where,
+            orderBy,
+        });
     }
 
-    findOneById(id: string): Promise<FreeCompany> {
-        return this.freeCompanyModel.findById(id).exec();
+    freeCompany(
+        where: Prisma.FreeCompanyWhereUniqueInput,
+    ): Promise<FreeCompany> {
+        return this.prisma.freeCompany.findUnique({
+            where,
+        });
     }
 }

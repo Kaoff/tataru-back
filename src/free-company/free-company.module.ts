@@ -1,15 +1,10 @@
 import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
+import { PrismaModule } from 'src/prisma/prisma.module';
 import { FreeCompanyController } from './free-company.controller';
 import { FreeCompanyService } from './free-company.service';
-import { FreeCompany, FreeCompanySchema } from './schemas/free-company.schema';
 
 @Module({
-    imports: [
-        MongooseModule.forFeature([
-            { name: FreeCompany.name, schema: FreeCompanySchema },
-        ]),
-    ],
+    imports: [PrismaModule],
     controllers: [FreeCompanyController],
     providers: [FreeCompanyService],
 })

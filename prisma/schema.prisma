@@ -1,0 +1,42 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String          @default(uuid()) @id
+}
+
+model Character {
+  id            String          @default(uuid()) @id
+  name          String
+  avatarUrl     String
+  jobs          Job[]
+  freeCompany   FreeCompany     @relation(fields: [freeCompanyId], references: [id], name: "members-freecompany")
+  freeCompanyId String
+  ownsId        FreeCompany?    @relation(name: "owner-freecompany")
+}
+
+model Job {
+  id          String          @default(uuid()) @id
+  character   Character       @relation(fields: [characterId], references: [id])
+  characterId String
+  name        String
+  level       Int
+}
+
+model FreeCompany {
+  id          String          @default(uuid()) @id
+  name        String
+  emblemUrls  String[]
+  members     Character[]     @relation(name: "members-freecompany")
+  owner       Character?      @relation(fields: [ownerId], references: [id], name: "owner-freecompany")
+  ownerId     String?         @unique
+}

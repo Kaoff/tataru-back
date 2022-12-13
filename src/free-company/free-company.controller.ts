@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
-import { FreeCompany } from './schemas/free-company.schema';
+import { FreeCompany } from '@prisma/client';
 import { FreeCompanyService } from './free-company.service';
 
 @Controller('free-company')
@@ -7,13 +7,13 @@ export class FreeCompanyController {
     constructor(private freeCompaniesService: FreeCompanyService) {}
 
     @Get()
-    async findAll(): Promise<FreeCompany[]> {
-        return this.freeCompaniesService.findAll();
+    async findAll(@Body() body): Promise<FreeCompany[]> {
+        return this.freeCompaniesService.freeCompanies(body);
     }
 
     @Get(':id')
     async findOneById(@Param() params): Promise<FreeCompany> {
-        return this.freeCompaniesService.findOneById(params.id);
+        return this.freeCompaniesService.freeCompany(params);
     }
 
     @Post()

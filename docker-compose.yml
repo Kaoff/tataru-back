@@ -1,13 +1,12 @@
 version: '3.8'
 services:
-  tataru-db:
-    image: mongo
-    container_name: tataru-db
+  db:
+    image: postgres
+    restart: always
     environment:
-      - PUID=1000
-      - PGID=1000
-    volumes:
-      - ./data:/data/db
+      - POSTGRES_USER=${DATABASE_USER}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
     ports:
-      - 27017:27017
-    restart: unless-stopped
+      - "5432:5432"
+    volumes: 
+      - /data:/var/lib/postgresql/data
