@@ -1,23 +1,24 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { FreeCompany } from '@prisma/client';
+import { CreateFreeCompanyDto } from './dto/create-free-company.dto';
 import { FreeCompanyService } from './free-company.service';
 
 @Controller('free-company')
 export class FreeCompanyController {
-    constructor(private freeCompaniesService: FreeCompanyService) {}
+    constructor(private readonly freeCompaniesService: FreeCompanyService) {}
 
     @Get()
     async findAll(@Body() body): Promise<FreeCompany[]> {
-        return this.freeCompaniesService.freeCompanies(body);
+        return this.freeCompaniesService.findAll(body);
     }
 
     @Get(':id')
-    async findOneById(@Param() params): Promise<FreeCompany> {
-        return this.freeCompaniesService.freeCompany(params);
+    async findOne(@Param() params): Promise<FreeCompany> {
+        return this.freeCompaniesService.findOne(params);
     }
 
     @Post()
-    async create(@Body() body): Promise<FreeCompany> {
+    async create(@Body() body: CreateFreeCompanyDto): Promise<FreeCompany> {
         return this.freeCompaniesService.create(body);
     }
 }
