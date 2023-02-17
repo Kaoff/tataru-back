@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { FreeCompany, Prisma } from '@prisma/client';
 import { CreateFreeCompanyDto } from './dto/create-free-company.dto';
+import { UpdateFreeCompanyDto } from './dto/update-free-company.dto';
 
 @Injectable()
 export class FreeCompanyService {
@@ -26,6 +27,13 @@ export class FreeCompanyService {
     findOne(id: string): Promise<FreeCompany> {
         return this.prisma.freeCompany.findUnique({
             where: { id },
+        });
+    }
+
+    update(id: string, dto: UpdateFreeCompanyDto): Promise<FreeCompany> {
+        return this.prisma.freeCompany.update({
+            where: { id },
+            data: dto,
         });
     }
 }
